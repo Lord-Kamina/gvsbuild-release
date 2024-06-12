@@ -55,7 +55,7 @@ jobs:
           --enable-gi
           --py-wheel
           --skip gtksourceview4,emeus,clutter
-          --patches-root-dir=${{ github.workspace }}\patches
+          --patches-root-dir=${{ github.workspace }}\gvsbuild\patches
           gtk3-full pycairo pygobject lz4 enchant
 
       - name: Restore git binary
