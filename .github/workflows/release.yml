@@ -16,7 +16,7 @@ jobs:
       matrix:
         python: ["3.9", "3.10"]
         platform: [x64, win32]
-        vstudio: [16]
+        vstudio: [17]
         include:
           - platform: x64
             arch: x64
