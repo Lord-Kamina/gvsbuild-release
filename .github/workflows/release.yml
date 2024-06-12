@@ -54,7 +54,9 @@ jobs:
           --vs-ver=${{ matrix.vstudio }}
           --enable-gi
           --py-wheel
-          --skip gtksourceview4,emeus,clutter
+          --skip gtksourceview4
+          --skip emeus
+          --skip clutter
           --patches-root-dir=${{ github.workspace }}\gvsbuild\patches
           gtk3-full pycairo pygobject lz4 enchant
 
