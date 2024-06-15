@@ -17,6 +17,8 @@ jobs:
         python: ["3.7", "3.9", "3.10"]
         platform: [x64, win32]
         vstudio: [17]
+        exclude:
+          - python: ${{ github.ref == 'refs/heads/latest' && '3.7' }}
         include:
           - platform: x64
             arch: x64
