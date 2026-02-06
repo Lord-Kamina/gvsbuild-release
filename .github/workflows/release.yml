@@ -17,24 +17,12 @@ jobs:
     runs-on: windows-2022
     strategy:
       matrix:
-        python: ["3.9", "3.10"]
+        python: ["3.9", "3.13"]
         platform: [x64, win32]
         vstudio: [17]
         fork: ["${{ github.event.inputs.fork }}"]
         ref: ["${{ github.event.inputs.ref }}"]
         include:
-          - python: "3.7"
-            platform: x64
-            arch: x64
-            vstudio: 17
-            fork: "Lord-Kamina"
-            ref: "older"
-          - python: "3.7"
-            platform: win32
-            arch: x86
-            vstudio: 17
-            fork: "Lord-Kamina"
-            ref: "older"
           - platform: x64
             arch: x64
           - platform: win32
@@ -42,14 +30,14 @@ jobs:
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: ${{ matrix.fork }}/gvsbuild
           fetch-depth: 0
           ref: ${{ matrix.ref }}
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python }}
           architecture: ${{ matrix.arch }}
@@ -66,6 +54,8 @@ jobs:
 
       - name: Build
         run: >
+          python -m pip list ;
+
           gvsbuild build
           --platform=${{ matrix.arch }}
           --vs-ver=${{ matrix.vstudio }}
