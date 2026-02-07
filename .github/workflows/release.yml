@@ -6,33 +6,53 @@ on:
   workflow_dispatch:
    inputs:
      fork:
-       description: "Enter a gvsbuild fork for the build with the latest stack, defaults to wingtk."
-       default: "wingtk"
-     ref:
-       description: "Enter a git ref for checking out the above repository, defaults to main."
-       default: "main"
+       description: "Enter a gvsbuild fork for the build with the latest stack, defaults to the same owner as this repo."
+       default: ""
+     latest_ref:
+       description: "Enter a git ref for checking out the above repository, defaults to latest."
+       default: "latest"
+     older_ref:
+       description: "Enter a git ref for checking out the above repository, defaults to older."
+       default: "older"
 
 jobs:
+  determine_vars:
+    runs-on: ubuntu-latest
+    outputs:
+      repo_fork: ${{ steps.get_repo_fork.outputs.repo_fork }}
+    steps:
+      - name: Determine repo fork
+        id: get_repo_fork
+        shell: bash
+        run: |
+          if [[ "${{ github.event.inputs.fork }}" != "" ]]; then
+              echo "repo_fork=${{ github.event.inputs.fork }}" >> $GITHUB_OUTPUT
+          else
+              echo "repo_fork=${{ github.repository_owner }}" >> $GITHUB_OUTPUT
+          fi
   build:
+    needs: determine_vars
     runs-on: windows-2022
     strategy:
       matrix:
-        python: ["3.9", "3.13"]
+        python: [3.13, 3.9]
         platform: [x64, win32]
         vstudio: [vs2022]
-        fork: ["${{ github.event.inputs.fork }}"]
-        ref: ["${{ github.event.inputs.ref }}"]
         include:
           - platform: x64
             arch: x64
           - platform: win32
             arch: x86
+          - python: 3.13
+            ref: "${{ github.event.inputs.latest_ref }}"
+          - python: 3.9
+            ref: "${{ github.event.inputs.older_ref }}"
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v6
         with:
-          repository: ${{ matrix.fork }}/gvsbuild
+          repository: "${{ needs.determine_vars.outputs.repo_fork }}/gvsbuild"
           fetch-depth: 0
           ref: ${{ matrix.ref }}
 
