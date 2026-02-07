@@ -19,7 +19,7 @@ jobs:
       matrix:
         python: ["3.9", "3.13"]
         platform: [x64, win32]
-        vstudio: [17]
+        vstudio: [vs2022]
         fork: ["${{ github.event.inputs.fork }}"]
         ref: ["${{ github.event.inputs.ref }}"]
         include:
