@@ -37,7 +37,6 @@ jobs:
       matrix:
         python: [3.13, 3.9]
         platform: [x64, win32]
-        vstudio: [vs2022]
         include:
           - platform: x64
             arch: x64
@@ -78,7 +77,6 @@ jobs:
 
           gvsbuild build
           --platform=${{ matrix.arch }}
-          --vs-ver=${{ matrix.vstudio }}
           --enable-gi
           --py-wheel
           --patches-root-dir=${{ github.workspace }}\gvsbuild\patches
@@ -93,7 +91,7 @@ jobs:
           ${{ github.workspace }}/${{ env.release_name }}.zip
           "C:\gtk-build\gtk\${{matrix.platform}}\release"
         env:
-          release_name: "gvsbuild-py${{ matrix.python }}-vs${{ matrix.vstudio }}-${{ matrix.arch }}"
+          release_name: "gvsbuild-py${{ matrix.python }}-${{ matrix.arch }}"
 
       - name: Current Date
         id: date
